@@ -8,7 +8,7 @@
               android:orientation="vertical">
 
     <com.soundwebcraft.dbaker.utils.EmptyStateRecyclerView
-        android:id="@+id/crime_recycler_view"
+        android:id="@+id/recipe_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
