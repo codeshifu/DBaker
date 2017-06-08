@@ -8,12 +8,14 @@ import java.util.List;
 public class Recipe {
     private String name;
     private int resourceId;
+    private int step;
 
     public Recipe() {}
 
-    public Recipe(String name, int resourceId) {
+    public Recipe(String name, int resourceId, int step) {
         this.name = name;
         this.resourceId = resourceId;
+        this.step = step;
     }
 
     public String getName() {
@@ -34,9 +36,14 @@ public class Recipe {
         resources.add(R.drawable.cheesecake);
 
         for (int i = 0; i < 4; i++) {
-            recipes.add(new Recipe("Recipe " + i, resources.get(i)));
+            int step = (int) (Math.random() * 12 + 1);
+            recipes.add(new Recipe("Recipe " + i, resources.get(i), step));
         }
 
         return recipes;
+    }
+
+    public int getStep() {
+        return step;
     }
 }

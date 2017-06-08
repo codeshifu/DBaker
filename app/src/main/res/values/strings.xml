@@ -3,4 +3,6 @@
     <string name="no_internet">Internet appears to be offline.</string>
     <string name="demo_recipe_name">Nutella</string>
     <string name="accessibility_recipe_image">recipe image</string>
+    <string name="sample_step">Aenean lacinia bibendum nulla sed consectetur. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</string>
+    <string name="steps_count">%1$d Steps</string>
 </resources>
