@@ -80,18 +80,21 @@ public class RecipeListFragment extends Fragment {
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
-            ImageView mImageView;
-            TextView mTextView;
+            ImageView ivRecipe;
+            TextView tvRecipeTitle;
+            TextView tvRecipeSteps;
 
             ViewHolder(View itemView) {
                 super(itemView);
-                mImageView = (ImageView) itemView.findViewById(R.id.recipe_image);
-                mTextView = (TextView) itemView.findViewById(R.id.recipe_title);
+                ivRecipe = (ImageView) itemView.findViewById(R.id.recipe_image);
+                tvRecipeTitle = (TextView) itemView.findViewById(R.id.recipe_title);
+                tvRecipeSteps = (TextView) itemView.findViewById(R.id.recipe_steps);
             }
 
             void bind(Recipe recipe) {
-                mImageView.setImageResource(recipe.getResourceId());
-                mTextView.setText(recipe.getName());
+                ivRecipe.setImageResource(recipe.getResourceId());
+                tvRecipeTitle.setText(recipe.getName());
+                tvRecipeSteps.setText(getString(R.string.steps_count, recipe.getStep()));
             }
         }
     }
