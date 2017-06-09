@@ -1,6 +1,8 @@
 package com.soundwebcraft.dbaker.fragments;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -24,7 +26,8 @@ public class RecipeListFragment extends Fragment {
     private RecipeAdapter mAdapter;
     private Context mContext;
 
-    public RecipeListFragment() {}
+    public RecipeListFragment() {
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -47,6 +50,17 @@ public class RecipeListFragment extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setHasFixedSize(true);
 
+        // set recyclerview empty state
+        View emptyView = v.findViewById(R.id.recipe_empty_view);
+        TextView feedback = (TextView) emptyView.findViewById(R.id.empty_state_feedback);
+
+        if (isConnected()) {
+            // TODO - deal with response from server
+        } else {
+            // if internet not available
+            // display recyclerview empty state
+            mRecyclerView.setEmptyView(emptyView);
+        }
 
         return v;
     }
@@ -97,5 +111,12 @@ public class RecipeListFragment extends Fragment {
                 tvRecipeSteps.setText(getString(R.string.steps_count, recipe.getStep()));
             }
         }
+    }
+
+    // check internet connection state
+    boolean isConnected() {
+        ConnectivityManager connMgr = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected();
     }
 }
