@@ -12,7 +12,7 @@
         android:layout_height="match_parent"/>
 
     <LinearLayout
-        android:id="@+id/crime_empty_view"
+        android:id="@+id/recipe_image_empty_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
