@@ -20,11 +20,20 @@ import com.soundwebcraft.dbaker.utils.EmptyStateRecyclerView;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 public class RecipeListFragment extends Fragment {
 
-    private EmptyStateRecyclerView mRecyclerView;
+    @BindView(R.id.recipe_recycler_view) EmptyStateRecyclerView mRecyclerView;
+    @BindView(R.id.recipe_empty_view)  View emptyView;
+    @BindView(R.id.empty_state_feedback) TextView emptyStateFeedback;
+
     private RecipeAdapter mAdapter;
     private Context mContext;
+
+    private Unbinder unbinder;
 
     public RecipeListFragment() {
     }
@@ -40,9 +49,9 @@ public class RecipeListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_recipe_list, container, false);
 
-        mAdapter = new RecipeAdapter(mContext, Recipe.getRecipes());
+        unbinder = ButterKnife.bind(this, v);
 
-        mRecyclerView = (EmptyStateRecyclerView) v.findViewById(R.id.recipe_recycler_view);
+        mAdapter = new RecipeAdapter(mContext, Recipe.getRecipes());
 
         GridLayoutManager layoutManager = new GridLayoutManager(mContext, 2);
 
@@ -51,9 +60,6 @@ public class RecipeListFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
 
         // set recyclerview empty state
-        View emptyView = v.findViewById(R.id.recipe_empty_view);
-        TextView feedback = (TextView) emptyView.findViewById(R.id.empty_state_feedback);
-
         if (isConnected()) {
             // TODO - deal with response from server
         } else {
@@ -65,7 +71,13 @@ public class RecipeListFragment extends Fragment {
         return v;
     }
 
-    private class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder> {
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
+    public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder> {
 
         private Context mContext;
         private List<Recipe> mRecipes;
@@ -94,15 +106,13 @@ public class RecipeListFragment extends Fragment {
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
-            ImageView ivRecipe;
-            TextView tvRecipeTitle;
-            TextView tvRecipeSteps;
+            @BindView(R.id.recipe_image) ImageView ivRecipe;
+            @BindView(R.id.recipe_title) TextView tvRecipeTitle;
+            @BindView(R.id.recipe_steps) TextView tvRecipeSteps;
 
             ViewHolder(View itemView) {
                 super(itemView);
-                ivRecipe = (ImageView) itemView.findViewById(R.id.recipe_image);
-                tvRecipeTitle = (TextView) itemView.findViewById(R.id.recipe_title);
-                tvRecipeSteps = (TextView) itemView.findViewById(R.id.recipe_steps);
+                ButterKnife.bind(this, itemView);
             }
 
             void bind(Recipe recipe) {
