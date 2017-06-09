@@ -2,10 +2,13 @@ package com.soundwebcraft.dbaker.dummy;
 
 import com.soundwebcraft.dbaker.R;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Recipe {
+public class Recipe implements Serializable {
+    // version number
+    private static final long serialVersionUID = 42L;
     private String name;
     private int resourceId;
     private int step;
