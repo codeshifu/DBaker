@@ -16,7 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.soundwebcraft.dbaker.R;
-import com.soundwebcraft.dbaker.RecipeDetail;
+import com.soundwebcraft.dbaker.RecipeDetailActivity;
 import com.soundwebcraft.dbaker.dummy.Recipe;
 import com.soundwebcraft.dbaker.utils.EmptyStateRecyclerView;
 
@@ -128,8 +128,8 @@ public class RecipeListFragment extends Fragment {
             public void onClick(View v) {
                 int clickedPosition = getAdapterPosition();
                 Recipe recipe = mRecipes.get(clickedPosition);
-                Intent intent = new Intent(mContext, RecipeDetail.class);
-                intent.putExtra(RecipeDetail.EXTRA_RECIPE, recipe);
+                Intent intent = new Intent(mContext, RecipeDetailActivity.class);
+                intent.putExtra(RecipeDetailActivity.EXTRA_RECIPE, recipe);
                 startActivity(intent);
             }
         }

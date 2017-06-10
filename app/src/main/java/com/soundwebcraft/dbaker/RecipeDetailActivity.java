@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.soundwebcraft.dbaker.dummy.Recipe;
 
-public class RecipeDetail extends AppCompatActivity {
+public class RecipeDetailActivity extends AppCompatActivity {
 
     public static final String EXTRA_RECIPE = "recipe";
 
