@@ -1,6 +1,7 @@
 package com.soundwebcraft.dbaker.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.soundwebcraft.dbaker.R;
+import com.soundwebcraft.dbaker.RecipeDetail;
 import com.soundwebcraft.dbaker.dummy.Recipe;
 import com.soundwebcraft.dbaker.utils.EmptyStateRecyclerView;
 
@@ -105,7 +107,7 @@ public class RecipeListFragment extends Fragment {
             return mRecipes.size();
         }
 
-        class ViewHolder extends RecyclerView.ViewHolder {
+        class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
             @BindView(R.id.recipe_image) ImageView ivRecipe;
             @BindView(R.id.recipe_title) TextView tvRecipeTitle;
             @BindView(R.id.recipe_steps) TextView tvRecipeSteps;
@@ -113,12 +115,22 @@ public class RecipeListFragment extends Fragment {
             ViewHolder(View itemView) {
                 super(itemView);
                 ButterKnife.bind(this, itemView);
+                itemView.setOnClickListener(this);
             }
 
             void bind(Recipe recipe) {
                 ivRecipe.setImageResource(recipe.getResourceId());
                 tvRecipeTitle.setText(recipe.getName());
                 tvRecipeSteps.setText(getString(R.string.steps_count, recipe.getStep()));
+            }
+
+            @Override
+            public void onClick(View v) {
+                int clickedPosition = getAdapterPosition();
+                Recipe recipe = mRecipes.get(clickedPosition);
+                Intent intent = new Intent(mContext, RecipeDetail.class);
+                intent.putExtra(RecipeDetail.EXTRA_RECIPE, recipe);
+                startActivity(intent);
             }
         }
     }
