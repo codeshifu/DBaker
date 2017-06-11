@@ -17,6 +17,10 @@ public class IngredientListFragment extends Fragment {
 
     private Unbinder unbinder;
 
+    public IngredientListFragment() {
+        // Required empty public constructor
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
