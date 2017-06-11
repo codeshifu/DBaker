@@ -78,9 +78,9 @@ public class RecipeDetailActivity extends AppCompatActivity {
             public CharSequence getPageTitle(int position) {
                 switch (position) {
                     case 0:
-                        return "INGREDIENTS";
+                        return getString(R.string.tab_ingredient);
                     case 1:
-                        return "STEPS";
+                        return getString(R.string.tab_step);
                     default:
                         return null;
                 }

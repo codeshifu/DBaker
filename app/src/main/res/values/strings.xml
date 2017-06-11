@@ -7,4 +7,6 @@
     <string name="steps_count">%1$d Steps</string>
     <string name="custom_font_name">Courgette-Regular.ttf</string>
     <string name="no_recipe_data">No recipe available</string>
+    <string name="tab_ingredient">INGREDIENTS</string>
+    <string name="tab_step">STEPS</string>
 </resources>
