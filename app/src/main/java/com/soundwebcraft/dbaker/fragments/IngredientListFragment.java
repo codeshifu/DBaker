@@ -49,6 +49,7 @@ public class IngredientListFragment extends Fragment {
         mRecyclerview.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerview.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL));
         mRecyclerview.setHasFixedSize(true);
+        mRecyclerview.setNestedScrollingEnabled(false);
         mRecyclerview.setAdapter(new IngredientAdapter(mContext));
 
         return v;
