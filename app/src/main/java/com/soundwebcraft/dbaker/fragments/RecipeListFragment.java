@@ -30,7 +30,7 @@ import butterknife.Unbinder;
 public class RecipeListFragment extends Fragment {
 
     @BindView(R.id.recyclerview) EmptyStateRecyclerView mRecyclerView;
-    @BindView(R.id.recipe_empty_view)  View emptyView;
+    @BindView(R.id.empty_view)  View emptyView;
     @BindView(R.id.empty_state_feedback) TextView emptyStateFeedback;
 
     private RecipeAdapter mAdapter;
