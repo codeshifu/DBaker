@@ -13,7 +13,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 
-public class IngredientListFragmnet extends Fragment {
+public class IngredientListFragment extends Fragment {
 
     private Unbinder unbinder;
 
