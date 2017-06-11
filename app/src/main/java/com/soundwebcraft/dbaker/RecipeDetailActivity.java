@@ -7,12 +7,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.soundwebcraft.dbaker.dummy.Recipe;
+import com.soundwebcraft.dbaker.fragments.IngredientListFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,22 +42,26 @@ public class RecipeDetailActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        Typeface courgette = Typeface.createFromAsset(getAssets(), "Courgette-Regular.ttf");
+
+        // hide default actionbar title
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) actionBar.setDisplayShowTitleEnabled(false);
+
+        Typeface courgette = Typeface.createFromAsset(getAssets(), getString(R.string.custom_font_name));
         mToolbarTitle.setTypeface(courgette);
 
         final Recipe recipe = (Recipe) getIntent().getSerializableExtra(EXTRA_RECIPE);
-        mToolbarTitle.setText("Nutella pie");
+        mToolbarTitle.setText(getString(R.string.demo_recipe_name));
+
         fm = getSupportFragmentManager();
+
         mViewpager.setAdapter(new FragmentPagerAdapter(fm) {
             @Override
             public Fragment getItem(int position) {
                 switch (position) {
                     case 0:
-                        return RecipeDetailFragment.newInstance(recipe);
+                        return new IngredientListFragment();
                     case 1:
-                        return RecipeDetailFragment.newInstance(recipe);
-                    case 2:
                         return RecipeDetailFragment.newInstance(recipe);
                     default:
                         return null;
@@ -64,7 +70,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
 
             @Override
             public int getCount() {
-                return 3;
+                return 2;
             }
 
             @Override
@@ -74,23 +80,12 @@ public class RecipeDetailActivity extends AppCompatActivity {
                         return "INGREDIENTS";
                     case 1:
                         return "STEPS";
-                    case 2:
-                        return "toppings";
                     default:
                         return null;
                 }
             }
         });
+        // attach tabLayout to viewpager
         mTab.setupWithViewPager(mViewpager);
-        // host RecipeListFragment
-        /*FragmentManager fm = getSupportFragmentManager();
-        Fragment fragment = fm.findFragmentById(R.id.fragment_container);
-        Recipe recipe = (Recipe) getIntent().getSerializableExtra(EXTRA_RECIPE);
-        if (fragment == null) {
-            fragment = RecipeDetailFragment.newInstance(recipe);
-            fm.beginTransaction()
-                    .add(R.id.fragment_container, fragment)
-                    .commit();
-        }*/
     }
 }
