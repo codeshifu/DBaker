@@ -1,55 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/item_container"
     android:layout_width="match_parent"
-    android:clickable="true"
-    android:foreground="?android:attr/selectableItemBackground"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="@dimen/cardview_default_radius"
-    app:cardElevation="@dimen/cardview_default_elevation">
+    android:background="@android:color/white"
+    android:padding="16dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+
+    <TextView
+        android:id="@+id/recipe_title"
+        style="@style/TextAppearance.AppCompat.Headline"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        tools:text="@string/demo_recipe_name"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
-        <ImageView
-            android:id="@+id/recipe_image"
-            android:layout_width="match_parent"
-            android:layout_height="90dp"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/accessibility_recipe_image"
-            android:scaleType="centerCrop"
-            tools:src="@drawable/cheesecake"/>
+    <TextView
+        android:id="@+id/recipe_guide"
+        style="@style/TextAppearance.AppCompat.Body1"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:ellipsize="end"
+        android:lineSpacingExtra="4dp"
+        android:maxLines="2"
+        android:minLines="2"
+        android:text="@string/sample_step"
+        app:layout_constraintLeft_toLeftOf="@+id/recipe_title"
+        app:layout_constraintTop_toBottomOf="@+id/recipe_title"/>
 
-        <TextView
-            android:id="@+id/recipe_title"
-            style="@style/Base.TextAppearance.AppCompat.Headline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:textSize="20sp"
-            tools:text="@string/demo_recipe_name"/>
+    <TextView
+        android:id="@+id/recipe_steps"
+        style="@style/TextAppearance.AppCompat.Caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/recipe_image"
+        app:layout_constraintLeft_toLeftOf="@+id/recipe_guide"
+        app:layout_constraintTop_toBottomOf="@+id/recipe_guide"
+        tools:text="@string/steps_count"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:text="@string/sample_step"/>
+    <ImageView
+        android:id="@+id/recipe_image"
+        android:layout_width="120dp"
+        android:layout_height="100dp"
+        android:contentDescription="@string/accessibility_recipe_image"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/recipe_title"
+        app:srcCompat="@drawable/brownies"/>
 
-        <TextView
-            android:id="@+id/recipe_steps"
-            android:padding="8dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="start"/>
-
-    </LinearLayout>
-</android.support.v7.widget.CardView>
+</android.support.constraint.ConstraintLayout>
