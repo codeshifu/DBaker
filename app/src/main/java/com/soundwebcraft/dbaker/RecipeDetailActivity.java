@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.soundwebcraft.dbaker.dummy.Recipe;
 import com.soundwebcraft.dbaker.fragments.IngredientListFragment;
+import com.soundwebcraft.dbaker.fragments.StepFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -62,7 +63,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
                     case 0:
                         return new IngredientListFragment();
                     case 1:
-                        return RecipeDetailFragment.newInstance(recipe);
+                        return new StepFragment();
                     default:
                         return null;
                 }
