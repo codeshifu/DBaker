@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,6 +47,12 @@ public class StepFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_step_list, container, false);
         unbinder = ButterKnife.bind(this, v);
 
+        GridLayoutManager layoutManager = new GridLayoutManager(mContext, 2);
+        mRecyclerview.setLayoutManager(layoutManager);
+        mRecyclerview.setHasFixedSize(true);
+        mRecyclerview.setNestedScrollingEnabled(false);
+        mRecyclerview.setAdapter(new StepAdapter(mContext));
+
         return v;
     }
 
@@ -81,12 +88,12 @@ public class StepFragment extends Fragment {
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
-            public ViewHolder(View itemView) {
+            ViewHolder(View itemView) {
                 super(itemView);
                 ButterKnife.bind(this, itemView);
             }
 
-            public void bind() {
+            void bind() {
 
             }
         }

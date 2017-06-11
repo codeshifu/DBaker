@@ -5,7 +5,7 @@
     android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="4dp"
+    android:layout_margin="8dp"
     app:cardCornerRadius="2dp"
     app:cardElevation="4dp">
 
@@ -16,7 +16,7 @@
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="100dp"
             android:contentDescription="@string/accessibility_recipe_image"
             android:scaleType="centerCrop"
             android:src="@drawable/brownies"/>
@@ -34,6 +34,7 @@
                 android:text="@string/demo_recipe_name"/>
 
             <TextView
+                android:maxLines="3"
                 android:layout_width="wrap_content"
                 style="@style/TextAppearance.AppCompat.Body1"
                 android:layout_height="wrap_content"
