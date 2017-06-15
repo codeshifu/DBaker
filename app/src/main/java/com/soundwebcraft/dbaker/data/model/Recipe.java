@@ -22,6 +22,9 @@ public class Recipe {
     @SerializedName("image")
     public String image;
 
+    public Recipe() {
+    }
+
     public int getId() {
         return id;
     }
@@ -46,7 +49,7 @@ public class Recipe {
         return image;
     }
 
-    public int getImageResourceId () {
+    public int getImageResourceId() {
         String recipeName = getName().replaceAll("\\s", "").toLowerCase();
         switch (recipeName) {
             case "nutellapie":
@@ -62,6 +65,7 @@ public class Recipe {
         }
     }
 
+    @Parcel
     public static class Ingredients {
         @SerializedName("quantity")
         public double quantity;
@@ -69,6 +73,9 @@ public class Recipe {
         public String measure;
         @SerializedName("ingredient")
         public String ingredient;
+
+        public Ingredients() {
+        }
 
         public double getQuantity() {
             return quantity;
@@ -83,6 +90,7 @@ public class Recipe {
         }
     }
 
+    @Parcel
     public static class Steps {
         @SerializedName("id")
         public int id;
@@ -94,6 +102,9 @@ public class Recipe {
         public String videourl;
         @SerializedName("thumbnailURL")
         public String thumbnailurl;
+
+        public Steps() {
+        }
 
         public int getId() {
             return id;
