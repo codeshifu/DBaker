@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,13 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.github.vipulasri.timelineview.TimelineView;
 import com.soundwebcraft.dbaker.R;
-import com.soundwebcraft.dbaker.data.model.Recipe;
+import com.soundwebcraft.dbaker.data.model.Recipe.Ingredients;
 import com.soundwebcraft.dbaker.utils.EmptyStateRecyclerView;
-import com.soundwebcraft.dbaker.utils.VectorDrawableUtils;
 
 import org.parceler.Parcels;
 
@@ -40,7 +38,7 @@ public class IngredientListFragment extends Fragment {
 
     private Unbinder unbinder;
     private Context mContext;
-    private List<Recipe.Ingredients> mIngredientsList;
+    private List<Ingredients> mIngredientsList;
 
     public IngredientListFragment() {
         // Required empty public constructor
@@ -59,11 +57,12 @@ public class IngredientListFragment extends Fragment {
         unbinder = ButterKnife.bind(this, v);
 
         mIngredientsList = Parcels.unwrap(getArguments().getParcelable(INGREDIENT_EXTRA));
-        Toast.makeText(mContext, "" + mIngredientsList.size(), Toast.LENGTH_SHORT).show();
+
         mRecyclerview.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+        mRecyclerview.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL));
         mRecyclerview.setHasFixedSize(true);
         mRecyclerview.setNestedScrollingEnabled(false);
-        mRecyclerview.setAdapter(new IngredientAdapter(mContext));
+        mRecyclerview.setAdapter(new IngredientAdapter(mContext, mIngredientsList));
 
         return v;
     }
@@ -74,7 +73,7 @@ public class IngredientListFragment extends Fragment {
         unbinder.unbind();
     }
 
-    public static IngredientListFragment newInstance(List<Recipe.Ingredients> ingredients) {
+    public static IngredientListFragment newInstance(List<Ingredients> ingredients) {
 
         Bundle args = new Bundle();
         args.putParcelable(INGREDIENT_EXTRA, Parcels.wrap(ingredients));
@@ -83,11 +82,13 @@ public class IngredientListFragment extends Fragment {
         return fragment;
     }
 
-    public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.ViewHolder> {
+    class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.ViewHolder> {
         private Context adapterContext;
+        private List<Ingredients> adapterIngredientLists;
 
-        public IngredientAdapter(Context context) {
+        IngredientAdapter(Context context, List<Ingredients> ingredients) {
             adapterContext = context;
+            adapterIngredientLists = ingredients;
         }
 
         @Override
@@ -95,39 +96,35 @@ public class IngredientListFragment extends Fragment {
             LayoutInflater inflater = LayoutInflater.from(adapterContext);
             View v = inflater.inflate(R.layout.list_item_ingredient, parent, false);
 
-            return new ViewHolder(v, viewType);
+            return new ViewHolder(v);
         }
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.bind();
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            return TimelineView.getTimeLineViewType(position, getItemCount());
+            Ingredients ingredient = mIngredientsList.get(position);
+            holder.bind(ingredient);
         }
 
         @Override
         public int getItemCount() {
-            return 15;
+            return adapterIngredientLists.size();
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
-            @BindView(R.id.time_marker)
-            TimelineView mTimelineView;
+            @BindView(R.id.ingredient)
+            TextView tvIngredient;
 
-
-            public ViewHolder(View itemView, int viewType) {
+            ViewHolder(View itemView) {
                 super(itemView);
                 ButterKnife.bind(this, itemView);
-                mTimelineView.initLine(viewType);
             }
 
-            public void bind() {
-                //mTimelineView.setMarker(ContextCompat.getDrawable(mContext, R.drawable.ic_marker), ContextCompat.getColor(mContext, R.color.colorPrimary));
-                mTimelineView.setMarker(VectorDrawableUtils.getDrawable(mContext, R.drawable.ic_marker_active, R.color.colorPrimaryDark));
+            void bind(Ingredients ingredient) {
+                java.text.DecimalFormat df = new java.text.DecimalFormat("");
+                double result = Double.parseDouble(df.format((ingredient.getQuantity())));
 
+                String s = String.valueOf((int) ingredient.getQuantity()) + ", " + ingredient.getMeasure() + ", " + ingredient.getIngredient();
+                tvIngredient.setText(s);
             }
         }
     }
