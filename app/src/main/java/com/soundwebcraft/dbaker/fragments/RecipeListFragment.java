@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.soundwebcraft.dbaker.R;
@@ -45,6 +46,8 @@ public class RecipeListFragment extends Fragment {
     View emptyView;
     @BindView(R.id.empty_state_feedback)
     TextView emptyStateFeedback;
+    @BindView(R.id.loading_indicator)
+    ProgressBar mLoadingIndicator;
 
     private RecipeAdapter mAdapter;
     private Context mContext;
@@ -53,6 +56,9 @@ public class RecipeListFragment extends Fragment {
     private Unbinder unbinder;
     public static final String TAG = RecipeListFragment.class.getSimpleName();
     private List<Recipe> mRecipes = new ArrayList<>();
+
+    // material design guidelines - progress activity
+    private boolean isLoading = true;
 
     public RecipeListFragment() {
     }
@@ -82,7 +88,8 @@ public class RecipeListFragment extends Fragment {
         if (isConnected()) {
             fetchRecipes();
         } else {
-            showEmptyView(null);
+            toggleLoadingIndicator(false);
+            showEmptyView(getString(R.string.no_internet));
         }
 
         return v;
@@ -94,19 +101,34 @@ public class RecipeListFragment extends Fragment {
         unbinder.unbind();
     }
 
+    // toggle loading indicator on/off
+    private void toggleLoadingIndicator(boolean state) {
+        if (state) {
+            mLoadingIndicator.setVisibility(View.VISIBLE);
+            isLoading = true;
+        } else {
+            isLoading = false;
+            mLoadingIndicator.setVisibility(View.GONE);
+        }
+    }
+
+    // display empty state
     private void showEmptyView(String msg) {
+        emptyView.setVisibility(View.VISIBLE);
         if (msg != null) {
             emptyStateFeedback.setText(msg);
         }
         mRecyclerView.setEmptyView(emptyView);
     }
 
+    // fetch recipes
     void fetchRecipes() {
         mService.getRecipes().enqueue(new Callback<List<Recipe>>() {
             @Override
             public void onResponse(@NonNull Call<List<Recipe>> call, @NonNull Response<List<Recipe>> response) {
                 int code = response.code();
                 if (response.isSuccessful()) {
+                    toggleLoadingIndicator(false);
                     if (response.body().size() > 0) {
                         Log.d(TAG, getString(R.string.response_success) + response.body().size());
                         List<Recipe> results = response.body();
@@ -115,9 +137,15 @@ public class RecipeListFragment extends Fragment {
                         }
                         mAdapter.notifyDataSetChanged();
                     } else {
+                        toggleLoadingIndicator(false);
                         showEmptyView(getString(R.string.response_no_data));
                     }
-                } else Log.d(TAG, getString(R.string.response_fail) + code);
+                } else {
+                    String msg = getString(R.string.response_fail);
+                    Log.d(TAG, msg + code);
+                    toggleLoadingIndicator(false);
+                    showEmptyView(msg);
+                }
             }
 
             @Override
