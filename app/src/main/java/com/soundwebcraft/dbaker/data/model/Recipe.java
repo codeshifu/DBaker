@@ -18,6 +18,31 @@ public class Recipe {
     @SerializedName("image")
     public String image;
 
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public List<Ingredients> getIngredients() {
+        return ingredients;
+    }
+
+    public List<Steps> getSteps() {
+        return steps;
+    }
+
+    public int getServings() {
+        return servings;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+
     public static class Ingredients {
         @SerializedName("quantity")
         public double quantity;
@@ -25,6 +50,18 @@ public class Recipe {
         public String measure;
         @SerializedName("ingredient")
         public String ingredient;
+
+        public double getQuantity() {
+            return quantity;
+        }
+
+        public String getMeasure() {
+            return measure;
+        }
+
+        public String getIngredient() {
+            return ingredient;
+        }
     }
 
     public static class Steps {
@@ -38,5 +75,25 @@ public class Recipe {
         public String videourl;
         @SerializedName("thumbnailURL")
         public String thumbnailurl;
+
+        public int getId() {
+            return id;
+        }
+
+        public String getShortdescription() {
+            return shortdescription;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public String getVideourl() {
+            return videourl;
+        }
+
+        public String getThumbnailurl() {
+            return thumbnailurl;
+        }
     }
 }
