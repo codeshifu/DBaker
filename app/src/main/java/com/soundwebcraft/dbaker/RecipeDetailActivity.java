@@ -59,6 +59,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
 
         final Recipe recipe = Parcels.unwrap(otherIntent.getParcelableExtra(EXTRA_RECIPE));
         mToolbarTitle.setText(recipe.getName());
+        heroImage.setImageResource(recipe.getImageResourceId());
 
         fm = getSupportFragmentManager();
 
