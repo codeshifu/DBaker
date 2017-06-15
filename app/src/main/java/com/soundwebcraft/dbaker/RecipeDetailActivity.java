@@ -67,7 +67,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
             public Fragment getItem(int position) {
                 switch (position) {
                     case 0:
-                        return new IngredientListFragment();
+                        return IngredientListFragment.newInstance(recipe.getIngredients());
                     case 1:
                         return new StepFragment();
                     default:

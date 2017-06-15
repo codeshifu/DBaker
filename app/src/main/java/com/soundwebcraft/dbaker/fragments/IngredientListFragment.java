@@ -11,11 +11,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.vipulasri.timelineview.TimelineView;
 import com.soundwebcraft.dbaker.R;
+import com.soundwebcraft.dbaker.data.model.Recipe;
 import com.soundwebcraft.dbaker.utils.EmptyStateRecyclerView;
 import com.soundwebcraft.dbaker.utils.VectorDrawableUtils;
+
+import org.parceler.Parcels;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,6 +30,7 @@ import butterknife.Unbinder;
 
 public class IngredientListFragment extends Fragment {
 
+    private static final String INGREDIENT_EXTRA = "ingredients";
     @BindView(R.id.recyclerview)
     EmptyStateRecyclerView mRecyclerview;
     @BindView(R.id.empty_state_feedback)
@@ -33,6 +40,7 @@ public class IngredientListFragment extends Fragment {
 
     private Unbinder unbinder;
     private Context mContext;
+    private List<Recipe.Ingredients> mIngredientsList;
 
     public IngredientListFragment() {
         // Required empty public constructor
@@ -50,6 +58,8 @@ public class IngredientListFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_ingredient_list, container, false);
         unbinder = ButterKnife.bind(this, v);
 
+        mIngredientsList = Parcels.unwrap(getArguments().getParcelable(INGREDIENT_EXTRA));
+        Toast.makeText(mContext, "" + mIngredientsList.size(), Toast.LENGTH_SHORT).show();
         mRecyclerview.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
         mRecyclerview.setHasFixedSize(true);
         mRecyclerview.setNestedScrollingEnabled(false);
@@ -62,6 +72,15 @@ public class IngredientListFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    public static IngredientListFragment newInstance(List<Recipe.Ingredients> ingredients) {
+
+        Bundle args = new Bundle();
+        args.putParcelable(INGREDIENT_EXTRA, Parcels.wrap(ingredients));
+        IngredientListFragment fragment = new IngredientListFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.ViewHolder> {
