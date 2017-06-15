@@ -1,47 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:padding="16dp"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_marginLeft="10dp"
-              android:layout_marginRight="10dp"
-              android:orientation="horizontal">
+              android:layout_height="wrap_content">
 
-    <com.github.vipulasri.timelineview.TimelineView
-        android:id="@+id/time_marker"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        app:line="@color/colorPrimary"
-        app:linePadding="5dp"
-        app:lineSize="3dp"
-        app:markerSize="20dp"/>
-
-    <android.support.v7.widget.CardView
+    <TextView
+        android:id="@+id/ingredient"
+        style="@style/TextAppearance.AppCompat.Body1"
+        android:text="@string/sample_step"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginBottom="15dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="15dp"
-        app:cardElevation="1dp"
-        app:contentPadding="15dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <TextView
-                style="@style/TextAppearance.AppCompat.Body1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/sample_step"/>
-
-        </LinearLayout>
-
-    </android.support.v7.widget.CardView>
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>
