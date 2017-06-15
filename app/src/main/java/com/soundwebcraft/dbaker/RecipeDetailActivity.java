@@ -1,5 +1,6 @@
 package com.soundwebcraft.dbaker;
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -16,6 +17,8 @@ import android.widget.TextView;
 import com.soundwebcraft.dbaker.data.model.Recipe;
 import com.soundwebcraft.dbaker.fragments.IngredientListFragment;
 import com.soundwebcraft.dbaker.fragments.StepFragment;
+
+import org.parceler.Parcels;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,8 +54,11 @@ public class RecipeDetailActivity extends AppCompatActivity {
         Typeface courgette = Typeface.createFromAsset(getAssets(), getString(R.string.custom_font_name));
         mToolbarTitle.setTypeface(courgette);
 
-        final Recipe recipe = (Recipe) getIntent().getSerializableExtra(EXTRA_RECIPE);
-        mToolbarTitle.setText(getString(R.string.demo_recipe_name));
+        Intent otherIntent = getIntent();
+        if (otherIntent == null) throw new NullPointerException(getString(R.string.null_intent));
+
+        final Recipe recipe = Parcels.unwrap(otherIntent.getParcelableExtra(EXTRA_RECIPE));
+        mToolbarTitle.setText(recipe.getName());
 
         fm = getSupportFragmentManager();
 

@@ -13,4 +13,5 @@
     <string name="response_error">An error occurred.</string>
     <string name="response_success">Success:</string>
     <string name="response_no_data">No recipes available.</string>
+    <string name="null_intent">Intent is null</string>
 </resources>
