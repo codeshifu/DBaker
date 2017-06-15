@@ -13,7 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.soundwebcraft.dbaker.dummy.Recipe;
+import com.soundwebcraft.dbaker.data.model.Recipe;
 import com.soundwebcraft.dbaker.fragments.IngredientListFragment;
 import com.soundwebcraft.dbaker.fragments.StepFragment;
 

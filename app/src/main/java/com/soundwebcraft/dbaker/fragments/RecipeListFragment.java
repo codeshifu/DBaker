@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,25 +20,39 @@ import android.widget.TextView;
 
 import com.soundwebcraft.dbaker.R;
 import com.soundwebcraft.dbaker.RecipeDetailActivity;
-import com.soundwebcraft.dbaker.dummy.Recipe;
+import com.soundwebcraft.dbaker.data.model.Recipe;
+import com.soundwebcraft.dbaker.data.remote.RecipeService;
+import com.soundwebcraft.dbaker.data.remote.RetrofitClient;
 import com.soundwebcraft.dbaker.utils.EmptyStateRecyclerView;
 
+import org.parceler.Parcels;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class RecipeListFragment extends Fragment {
 
-    @BindView(R.id.recyclerview) EmptyStateRecyclerView mRecyclerView;
-    @BindView(R.id.empty_view)  View emptyView;
-    @BindView(R.id.empty_state_feedback) TextView emptyStateFeedback;
+    @BindView(R.id.recyclerview)
+    EmptyStateRecyclerView mRecyclerView;
+    @BindView(R.id.empty_view)
+    View emptyView;
+    @BindView(R.id.empty_state_feedback)
+    TextView emptyStateFeedback;
 
     private RecipeAdapter mAdapter;
     private Context mContext;
+    private RecipeService mService;
 
     private Unbinder unbinder;
+    public static final String TAG = RecipeListFragment.class.getSimpleName();
+    private List<Recipe> mRecipes = new ArrayList<>();
 
     public RecipeListFragment() {
     }
@@ -45,6 +61,7 @@ public class RecipeListFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         mContext = context;
+        mService = RetrofitClient.getClient().create(RecipeService.class);
     }
 
     @Nullable
@@ -54,7 +71,7 @@ public class RecipeListFragment extends Fragment {
 
         unbinder = ButterKnife.bind(this, v);
 
-        mAdapter = new RecipeAdapter(mContext, Recipe.getRecipes());
+        mAdapter = new RecipeAdapter(mContext, mRecipes);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
         mRecyclerView.setLayoutManager(layoutManager);
@@ -62,13 +79,10 @@ public class RecipeListFragment extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setHasFixedSize(true);
 
-        // set recyclerview empty state
         if (isConnected()) {
-            // TODO - deal with response from server
+            fetchRecipes();
         } else {
-            // if internet not available
-            // display recyclerview empty state
-            mRecyclerView.setEmptyView(emptyView);
+            showEmptyView(null);
         }
 
         return v;
@@ -80,12 +94,46 @@ public class RecipeListFragment extends Fragment {
         unbinder.unbind();
     }
 
-    public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder> {
+    private void showEmptyView(String msg) {
+        if (msg != null) {
+            emptyStateFeedback.setText(msg);
+        }
+        mRecyclerView.setEmptyView(emptyView);
+    }
+
+    void fetchRecipes() {
+        mService.getRecipes().enqueue(new Callback<List<Recipe>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Recipe>> call, @NonNull Response<List<Recipe>> response) {
+                int code = response.code();
+                if (response.isSuccessful()) {
+                    if (response.body().size() > 0) {
+                        Log.d(TAG, getString(R.string.response_success) + response.body().size());
+                        List<Recipe> results = response.body();
+                        for (Recipe recipe : results) {
+                            mRecipes.add(recipe);
+                        }
+                        mAdapter.notifyDataSetChanged();
+                    } else {
+                        showEmptyView(getString(R.string.response_no_data));
+                    }
+                } else Log.d(TAG, getString(R.string.response_fail) + code);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Recipe>> call, @NonNull Throwable t) {
+                t.printStackTrace();
+                Log.e(TAG, getString(R.string.response_error) + t.getMessage());
+            }
+        });
+    }
+
+    class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder> {
 
         private Context mContext;
         private List<Recipe> mRecipes;
 
-        public RecipeAdapter(Context context, List<Recipe> recipes) {
+        RecipeAdapter(Context context, List<Recipe> recipes) {
             mContext = context;
             mRecipes = recipes;
         }
@@ -109,9 +157,14 @@ public class RecipeListFragment extends Fragment {
         }
 
         class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-            @BindView(R.id.recipe_image) ImageView ivRecipe;
-            @BindView(R.id.recipe_title) TextView tvRecipeTitle;
-            @BindView(R.id.recipe_steps) TextView tvRecipeSteps;
+            @BindView(R.id.recipe_image)
+            ImageView ivRecipe;
+            @BindView(R.id.recipe_title)
+            TextView tvRecipeTitle;
+            @BindView(R.id.recipe_steps)
+            TextView tvRecipeSteps;
+            @BindView(R.id.recipe_guide)
+            TextView tvRecipeGuide;
 
             ViewHolder(View itemView) {
                 super(itemView);
@@ -120,9 +173,21 @@ public class RecipeListFragment extends Fragment {
             }
 
             void bind(Recipe recipe) {
-                ivRecipe.setImageResource(recipe.getResourceId());
-                tvRecipeTitle.setText(recipe.getName());
-                tvRecipeSteps.setText(getString(R.string.steps_count, recipe.getStep()));
+                if (recipe != null) {
+                    String step = null;
+                    try {
+                        step = recipe.getSteps().get((int) (Math.random() * 4 + 1) + 1).getDescription();
+                    } catch (IndexOutOfBoundsException e) {
+                        step = "";
+                        e.printStackTrace();
+                    }
+                    int stepsCount = recipe.getSteps().size();
+
+                    ivRecipe.setImageResource(recipe.getImageResourceId());
+                    tvRecipeTitle.setText(recipe.getName());
+                    tvRecipeGuide.setText(step);
+                    tvRecipeSteps.setText(getString(R.string.steps_count, stepsCount));
+                }
             }
 
             @Override
@@ -130,7 +195,7 @@ public class RecipeListFragment extends Fragment {
                 int clickedPosition = getAdapterPosition();
                 Recipe recipe = mRecipes.get(clickedPosition);
                 Intent intent = new Intent(mContext, RecipeDetailActivity.class);
-                intent.putExtra(RecipeDetailActivity.EXTRA_RECIPE, recipe);
+                intent.putExtra(RecipeDetailActivity.EXTRA_RECIPE, Parcels.wrap(recipe));
                 startActivity(intent);
             }
         }

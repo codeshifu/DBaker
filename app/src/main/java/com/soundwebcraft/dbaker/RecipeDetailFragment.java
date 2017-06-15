@@ -7,7 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.soundwebcraft.dbaker.dummy.Recipe;
+import com.soundwebcraft.dbaker.data.model.Recipe;
+
+import org.parceler.Parcels;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -25,7 +27,7 @@ public class RecipeDetailFragment extends Fragment {
     public static RecipeDetailFragment newInstance(Recipe recipe) {
         RecipeDetailFragment fragment = new RecipeDetailFragment();
         Bundle args = new Bundle();
-        args.putSerializable(ARG_RECIPE, recipe);
+        args.putParcelable(ARG_RECIPE, Parcels.wrap(recipe));
         fragment.setArguments(args);
 
         return fragment;

@@ -9,4 +9,8 @@
     <string name="no_recipe_data">No recipe available</string>
     <string name="tab_ingredient">INGREDIENTS</string>
     <string name="tab_step">STEPS</string>
+    <string name="response_fail">Unable to fetch result from server:</string>
+    <string name="response_error">Error:</string>
+    <string name="response_success">Success:</string>
+    <string name="response_no_data">No recipe available.</string>
 </resources>
