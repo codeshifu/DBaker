@@ -1,9 +1,13 @@
 package com.soundwebcraft.dbaker.data.model;
 
 import com.google.gson.annotations.SerializedName;
+import com.soundwebcraft.dbaker.R;
+
+import org.parceler.Parcel;
 
 import java.util.List;
 
+@Parcel
 public class Recipe {
     @SerializedName("id")
     public int id;
@@ -42,6 +46,21 @@ public class Recipe {
         return image;
     }
 
+    public int getImageResourceId () {
+        String recipeName = getName().replaceAll("\\s", "").toLowerCase();
+        switch (recipeName) {
+            case "nutellapie":
+                return R.drawable.nutellapie;
+            case "cheesecake":
+                return R.drawable.cheesecake;
+            case "yellowcake":
+                return R.drawable.yellowcake;
+            case "brownies":
+                return R.drawable.brownies;
+            default:
+                throw new IllegalArgumentException("Recipe image not found");
+        }
+    }
 
     public static class Ingredients {
         @SerializedName("quantity")
