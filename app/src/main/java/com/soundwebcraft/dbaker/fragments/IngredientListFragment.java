@@ -19,6 +19,7 @@ import com.soundwebcraft.dbaker.utils.EmptyStateRecyclerView;
 
 import org.parceler.Parcels;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 import butterknife.BindView;
@@ -31,6 +32,7 @@ import static com.soundwebcraft.dbaker.R.id.ingredient;
 public class IngredientListFragment extends Fragment {
 
     private static final String INGREDIENT_EXTRA = "ingredients";
+    public static final String TAG = IngredientListFragment.class.getSimpleName();
     @BindView(R.id.recyclerview)
     EmptyStateRecyclerView mRecyclerview;
     @BindView(R.id.empty_state_feedback)
@@ -123,10 +125,8 @@ public class IngredientListFragment extends Fragment {
             }
 
             void bind(Ingredients ingredient) {
-                java.text.DecimalFormat df = new java.text.DecimalFormat("");
-                double result = Double.parseDouble(df.format((ingredient.getQuantity())));
-
-                String s = String.valueOf((int) ingredient.getQuantity()) + ", " + ingredient.getMeasure() + ", " + ingredient.getIngredient();
+                DecimalFormat df = new DecimalFormat("##.#");
+                String s = df.format(ingredient.getQuantity()) + " " + ingredient.getMeasure() + ", " + ingredient.getIngredient();
                 tvIngredient.setText(s);
             }
         }
