@@ -1,7 +1,6 @@
 package com.soundwebcraft.dbaker.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -20,13 +19,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.soundwebcraft.dbaker.R;
-import com.soundwebcraft.dbaker.RecipeDetailActivity;
 import com.soundwebcraft.dbaker.data.model.Recipe;
 import com.soundwebcraft.dbaker.data.remote.RecipeService;
 import com.soundwebcraft.dbaker.data.remote.RetrofitClient;
 import com.soundwebcraft.dbaker.utils.EmptyStateRecyclerView;
-
-import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,12 +56,23 @@ public class RecipeListFragment extends Fragment {
     // material design guidelines - progress activity
     private boolean isLoading = true;
 
+    private OnListItemSelectedListener listener;
+
+    public interface OnListItemSelectedListener {
+        public void onItemSelected(Recipe recipe);
+    }
+
     public RecipeListFragment() {
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        if (context instanceof OnListItemSelectedListener) {
+            listener = (OnListItemSelectedListener) context;
+        } else {
+            throw new ClassCastException(context.toString() + " must implement interface");
+        }
         mContext = context;
         mService = RetrofitClient.getClient().create(RecipeService.class);
     }
@@ -222,9 +229,7 @@ public class RecipeListFragment extends Fragment {
             public void onClick(View v) {
                 int clickedPosition = getAdapterPosition();
                 Recipe recipe = mRecipes.get(clickedPosition);
-                Intent intent = new Intent(mContext, RecipeDetailActivity.class);
-                intent.putExtra(RecipeDetailActivity.EXTRA_RECIPE, Parcels.wrap(recipe));
-                startActivity(intent);
+                listener.onItemSelected(recipe);
             }
         }
     }

@@ -25,6 +25,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
+import static com.soundwebcraft.dbaker.R.id.ingredient;
+
 
 public class IngredientListFragment extends Fragment {
 
@@ -47,7 +49,7 @@ public class IngredientListFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mContext = context;
+        mContext = getActivity();
     }
 
     @Nullable
@@ -63,6 +65,7 @@ public class IngredientListFragment extends Fragment {
         mRecyclerview.setHasFixedSize(true);
         mRecyclerview.setNestedScrollingEnabled(false);
         mRecyclerview.setAdapter(new IngredientAdapter(mContext, mIngredientsList));
+
 
         return v;
     }
@@ -111,7 +114,7 @@ public class IngredientListFragment extends Fragment {
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
-            @BindView(R.id.ingredient)
+            @BindView(ingredient)
             TextView tvIngredient;
 
             ViewHolder(View itemView) {
