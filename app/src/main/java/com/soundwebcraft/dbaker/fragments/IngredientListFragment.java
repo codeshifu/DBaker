@@ -123,8 +123,13 @@ public class IngredientListFragment extends Fragment {
             }
 
             void bind(Ingredients ingredient) {
+                String ingr = ingredient.getIngredient();
+                ingr = Character.toUpperCase(ingr.charAt(0)) + ingr.substring(1);
+                String measure = ingredient.getMeasure();
+                double qty = ingredient.getQuantity();
+
                 DecimalFormat df = new DecimalFormat("##.#");
-                String s = ingredient.getIngredient() + ", " + df.format(ingredient.getQuantity()) + " " + ingredient.getMeasure();
+                String s = ingr + ", " + df.format(qty) + " " + measure;
                 tvIngredient.setText(s);
             }
         }
