@@ -42,6 +42,8 @@ dependencies {
     // parceler
     compile 'org.parceler:parceler-api:1.1.6'
     annotationProcessor 'org.parceler:parceler:1.1.6'
+    // exoplayer
+    compile 'com.google.android.exoplayer:exoplayer:r2.4.0'
 
     testCompile 'junit:junit:4.12'
 }
