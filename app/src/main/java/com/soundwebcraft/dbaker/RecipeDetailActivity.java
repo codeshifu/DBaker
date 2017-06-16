@@ -70,7 +70,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
                     case 0:
                         return IngredientListFragment.newInstance(recipe.getIngredients());
                     case 1:
-                        return new StepFragment();
+                        return StepFragment.newInstance(recipe.getSteps());
                     default:
                         return null;
                 }

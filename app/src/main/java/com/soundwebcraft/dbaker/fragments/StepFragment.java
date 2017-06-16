@@ -4,23 +4,33 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.github.vipulasri.timelineview.TimelineView;
 import com.soundwebcraft.dbaker.R;
 import com.soundwebcraft.dbaker.utils.EmptyStateRecyclerView;
+import com.soundwebcraft.dbaker.utils.VectorDrawableUtils;
+
+import org.parceler.Parcels;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
+import static com.soundwebcraft.dbaker.data.model.Recipe.Steps;
+
 
 public class StepFragment extends Fragment {
+    public static final String STEP_EXTRA = "steps";
     @BindView(R.id.recyclerview)
     EmptyStateRecyclerView mRecyclerview;
     @BindView(R.id.empty_state_feedback)
@@ -30,6 +40,7 @@ public class StepFragment extends Fragment {
 
     private Unbinder unbinder;
     private Context mContext;
+    private List<Steps> mStepList;
 
     public StepFragment() {
         // Required empty public constructor
@@ -47,11 +58,12 @@ public class StepFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_step_list, container, false);
         unbinder = ButterKnife.bind(this, v);
 
-        GridLayoutManager layoutManager = new GridLayoutManager(mContext, 2);
-        mRecyclerview.setLayoutManager(layoutManager);
+        mStepList = Parcels.unwrap(getArguments().getParcelable(STEP_EXTRA));
+
+        mRecyclerview.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
         mRecyclerview.setHasFixedSize(true);
         mRecyclerview.setNestedScrollingEnabled(false);
-        mRecyclerview.setAdapter(new StepAdapter(mContext));
+        mRecyclerview.setAdapter(new StepAdapter(mContext, mStepList));
 
         return v;
     }
@@ -62,11 +74,21 @@ public class StepFragment extends Fragment {
         unbinder.unbind();
     }
 
+    public static StepFragment newInstance(List<Steps> steps) {
+        Bundle args = new Bundle();
+        args.putParcelable(STEP_EXTRA, Parcels.wrap(steps));
+        StepFragment fragment = new StepFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     public class StepAdapter extends RecyclerView.Adapter<StepAdapter.ViewHolder> {
         private Context adapterContext;
+        private List<Steps> mStepList;
 
-        public StepAdapter(Context context) {
+        public StepAdapter(Context context, List<Steps> steps) {
             adapterContext = context;
+            mStepList = steps;
         }
 
         @Override
@@ -74,27 +96,50 @@ public class StepFragment extends Fragment {
             LayoutInflater inflater = LayoutInflater.from(adapterContext);
             View v = inflater.inflate(R.layout.list_item_step, parent, false);
 
-            return new ViewHolder(v);
+            return new ViewHolder(v, viewType);
         }
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.bind();
+            Steps step = mStepList.get(position);
+            holder.bind(step);
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return TimelineView.getTimeLineViewType(position, getItemCount());
         }
 
         @Override
         public int getItemCount() {
-            return 8;
+            return mStepList.size();
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
-            ViewHolder(View itemView) {
+            @BindView(R.id.time_marker)
+            TimelineView mTimelineView;
+            @BindView(R.id.short_description)
+            TextView tvShortDescription;
+            @BindView(R.id.description)
+            TextView tvDescription;
+
+
+            ViewHolder(View itemView, int viewType) {
                 super(itemView);
                 ButterKnife.bind(this, itemView);
+                mTimelineView.initLine(viewType);
             }
 
-            void bind() {
-
+            void bind(Steps step) {
+                if (step != null) {
+                    tvShortDescription.setText(step.getShortdescription());
+                    tvDescription.setText(step.getDescription());
+                    if (TextUtils.isEmpty(step.getVideourl())) {
+                        mTimelineView.setMarker(VectorDrawableUtils.getDrawable(mContext, R.drawable.ic_radio, R.color.colorPrimaryDark));
+                    } else {
+                        mTimelineView.setMarker(VectorDrawableUtils.getDrawable(mContext, R.drawable.ic_play, R.color.colorPrimaryDark));
+                    }
+                }
             }
         }
     }
