@@ -1,58 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/item_container"
     android:layout_width="match_parent"
+    android:orientation="horizontal"
     android:layout_height="wrap_content"
     android:background="@android:color/white"
+    android:paddingLeft="8dp"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp"
     android:padding="16dp">
 
-
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:paddingLeft="8dp"
+        android:layout_marginRight="16dp"
+        android:layout_height="wrap_content">
     <TextView
         android:id="@+id/recipe_title"
         style="@style/TextAppearance.AppCompat.Headline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="@string/demo_recipe_name"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        tools:text="@string/demo_recipe_name"/>
 
     <TextView
         android:id="@+id/recipe_guide"
         style="@style/TextAppearance.AppCompat.Body1"
-        android:layout_width="200dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:ellipsize="end"
-        android:lineSpacingExtra="4dp"
+        android:lineSpacingExtra="2dp"
         android:maxLines="2"
         android:minLines="2"
-        android:text="@string/sample_text"
-        app:layout_constraintLeft_toLeftOf="@+id/recipe_title"
-        app:layout_constraintTop_toBottomOf="@+id/recipe_title"/>
+        tools:text="@string/sample_text"/>
 
     <TextView
         android:id="@+id/recipe_steps"
         style="@style/TextAppearance.AppCompat.Caption"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
         android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="@+id/recipe_image"
-        app:layout_constraintLeft_toLeftOf="@+id/recipe_guide"
-        app:layout_constraintTop_toBottomOf="@+id/recipe_guide"
+        android:layout_marginTop="8dp"
         tools:text="@string/steps_count"/>
+
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/recipe_image"
         android:layout_width="120dp"
         android:layout_height="100dp"
         android:contentDescription="@string/accessibility_recipe_image"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/recipe_title"
         app:srcCompat="@drawable/brownies"/>
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>
