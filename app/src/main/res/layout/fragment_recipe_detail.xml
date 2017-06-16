@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <TextView
-            android:text="@string/sample_step"
+            android:text="@string/sample_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     </LinearLayout>
