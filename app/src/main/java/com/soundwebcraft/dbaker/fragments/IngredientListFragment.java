@@ -26,8 +26,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-import static com.soundwebcraft.dbaker.R.id.ingredient;
-
 
 public class IngredientListFragment extends Fragment {
 
@@ -116,7 +114,7 @@ public class IngredientListFragment extends Fragment {
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
-            @BindView(ingredient)
+            @BindView(R.id.ingredient)
             TextView tvIngredient;
 
             ViewHolder(View itemView) {
@@ -126,7 +124,7 @@ public class IngredientListFragment extends Fragment {
 
             void bind(Ingredients ingredient) {
                 DecimalFormat df = new DecimalFormat("##.#");
-                String s = df.format(ingredient.getQuantity()) + " " + ingredient.getMeasure() + ", " + ingredient.getIngredient();
+                String s = ingredient.getIngredient() + ", " + df.format(ingredient.getQuantity()) + " " + ingredient.getMeasure();
                 tvIngredient.setText(s);
             }
         }
