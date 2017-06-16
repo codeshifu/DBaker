@@ -1,8 +1,10 @@
 package com.soundwebcraft.dbaker.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.github.vipulasri.timelineview.TimelineView;
+import com.soundwebcraft.dbaker.PlayerActivity;
 import com.soundwebcraft.dbaker.R;
 import com.soundwebcraft.dbaker.utils.EmptyStateRecyclerView;
 import com.soundwebcraft.dbaker.utils.VectorDrawableUtils;
@@ -115,7 +118,7 @@ public class StepFragment extends Fragment {
             return mStepList.size();
         }
 
-        class ViewHolder extends RecyclerView.ViewHolder {
+        class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
             @BindView(R.id.time_marker)
             TimelineView mTimelineView;
             @BindView(R.id.short_description)
@@ -128,6 +131,7 @@ public class StepFragment extends Fragment {
                 super(itemView);
                 ButterKnife.bind(this, itemView);
                 mTimelineView.initLine(viewType);
+                itemView.setOnClickListener(this);
             }
 
             void bind(Steps step) {
@@ -139,6 +143,20 @@ public class StepFragment extends Fragment {
                     } else {
                         mTimelineView.setMarker(VectorDrawableUtils.getDrawable(mContext, R.drawable.ic_play, R.color.colorPrimaryDark));
                     }
+                }
+            }
+
+            @Override
+            public void onClick(View v) {
+                int position = getAdapterPosition();
+                Steps step = mStepList.get(position);
+                String videoURL = step.getVideourl();
+                if (!TextUtils.isEmpty(videoURL)) {
+                    Intent intent = new Intent(mContext, PlayerActivity.class);
+                    intent.putExtra(PlayerActivity.VIDEO_EXTRA, videoURL);
+                    startActivity(intent);
+                } else {
+                    Snackbar.make(v, getString(R.string.no_video), Snackbar.LENGTH_LONG).show();
                 }
             }
         }
