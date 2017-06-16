@@ -156,7 +156,14 @@ public class StepFragment extends Fragment {
                     intent.putExtra(PlayerActivity.VIDEO_EXTRA, videoURL);
                     startActivity(intent);
                 } else {
-                    Snackbar.make(v, getString(R.string.no_video), Snackbar.LENGTH_LONG).show();
+                    final Snackbar snackbar = Snackbar.make(v, getString(R.string.no_video), Snackbar.LENGTH_LONG);
+                    snackbar.setAction(android.R.string.ok, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            snackbar.dismiss();
+                        }
+                    });
+                    snackbar.show();
                 }
             }
         }
