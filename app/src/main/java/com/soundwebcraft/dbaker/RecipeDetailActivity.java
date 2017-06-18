@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 
 import com.soundwebcraft.dbaker.data.model.Recipe;
+import com.soundwebcraft.dbaker.fragments.DetailFragment;
 
 import org.parceler.Parcels;
 

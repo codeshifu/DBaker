@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 
 import com.soundwebcraft.dbaker.data.model.Recipe;
+import com.soundwebcraft.dbaker.fragments.DetailFragment;
 import com.soundwebcraft.dbaker.fragments.RecipeListFragment;
 
 import org.parceler.Parcels;

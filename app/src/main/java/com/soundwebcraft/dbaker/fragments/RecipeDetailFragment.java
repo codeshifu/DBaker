@@ -1,4 +1,4 @@
-package com.soundwebcraft.dbaker;
+package com.soundwebcraft.dbaker.fragments;
 
 
 import android.os.Bundle;
@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.soundwebcraft.dbaker.R;
 import com.soundwebcraft.dbaker.data.model.Recipe;
 
 import org.parceler.Parcels;

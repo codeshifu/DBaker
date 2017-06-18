@@ -1,4 +1,4 @@
-package com.soundwebcraft.dbaker;
+package com.soundwebcraft.dbaker.fragments;
 
 
 import android.content.Context;
@@ -15,9 +15,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.soundwebcraft.dbaker.R;
 import com.soundwebcraft.dbaker.data.model.Recipe;
-import com.soundwebcraft.dbaker.fragments.IngredientListFragment;
-import com.soundwebcraft.dbaker.fragments.StepFragment;
 
 import org.parceler.Parcels;
 
