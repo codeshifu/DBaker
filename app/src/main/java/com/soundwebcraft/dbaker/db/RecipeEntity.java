@@ -34,7 +34,7 @@ public class RecipeEntity extends SugarRecord<RecipeEntity> {
         return image;
     }
 
-    public class StepEntity extends SugarRecord<StepEntity> {
+    public static class StepEntity extends SugarRecord<StepEntity> {
         int stepId;
         String shortdescription;
         String description;
@@ -76,7 +76,7 @@ public class RecipeEntity extends SugarRecord<RecipeEntity> {
         }
     }
 
-    public class IngredientEntity extends SugarRecord<IngredientEntity> {
+    public static class IngredientEntity extends SugarRecord<IngredientEntity> {
         double quantity;
         String measure;
         String ingredient;
