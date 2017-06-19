@@ -25,6 +25,15 @@ public class Recipe {
     public Recipe() {
     }
 
+    public Recipe(int id, String name, List<Ingredients> ingredients, List<Steps> steps, int servings, String image) {
+        this.id = id;
+        this.name = name;
+        this.ingredients = ingredients;
+        this.steps = steps;
+        this.servings = servings;
+        this.image = image;
+    }
+
     public int getId() {
         return id;
     }
@@ -88,6 +97,12 @@ public class Recipe {
         public String getIngredient() {
             return ingredient;
         }
+
+        public Ingredients(double quantity, String measure, String ingredient) {
+            this.quantity = quantity;
+            this.measure = measure;
+            this.ingredient = ingredient;
+        }
     }
 
     @Parcel
@@ -124,6 +139,14 @@ public class Recipe {
 
         public String getThumbnailurl() {
             return thumbnailurl;
+        }
+
+        public Steps(int id, String shortdescription, String description, String videourl, String thumbnailurl) {
+            this.id = id;
+            this.shortdescription = shortdescription;
+            this.description = description;
+            this.videourl = videourl;
+            this.thumbnailurl = thumbnailurl;
         }
     }
 }
