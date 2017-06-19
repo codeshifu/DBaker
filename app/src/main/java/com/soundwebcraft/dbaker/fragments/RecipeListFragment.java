@@ -22,6 +22,8 @@ import com.soundwebcraft.dbaker.R;
 import com.soundwebcraft.dbaker.data.model.Recipe;
 import com.soundwebcraft.dbaker.data.remote.RecipeService;
 import com.soundwebcraft.dbaker.data.remote.RetrofitClient;
+import com.soundwebcraft.dbaker.db.DbUtils;
+import com.soundwebcraft.dbaker.db.RecipeEntity;
 import com.soundwebcraft.dbaker.utils.EmptyStateRecyclerView;
 
 import java.util.ArrayList;
@@ -92,11 +94,24 @@ public class RecipeListFragment extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setHasFixedSize(true);
 
-        if (isConnected()) {
-            fetchRecipes();
-        } else {
+        long count = RecipeEntity.count(RecipeEntity.class, null, null);
+        if (count > 0) {
+            // hide progress bar
             toggleLoadingIndicator(false);
-            showEmptyView(getString(R.string.no_internet));
+            // load data from db
+            List<RecipeEntity> recipeEntities = RecipeEntity.listAll(RecipeEntity.class);
+            for (RecipeEntity recipeEntity : recipeEntities) {
+                Recipe recipe = DbUtils.convertToRecipeObject(recipeEntity);
+                mRecipes.add(recipe);
+            }
+            mAdapter.notifyDataSetChanged();
+        } else {
+            if (isConnected()) {
+                fetchRecipes();
+            } else {
+                toggleLoadingIndicator(false);
+                showEmptyView(getString(R.string.no_internet));
+            }
         }
 
         return v;
