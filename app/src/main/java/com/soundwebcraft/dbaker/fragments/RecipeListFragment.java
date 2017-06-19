@@ -141,6 +141,15 @@ public class RecipeListFragment extends Fragment {
                         List<Recipe> results = response.body();
                         for (Recipe recipe : results) {
                             mRecipes.add(recipe);
+                            // save entities
+                            List<Recipe.Ingredients> ingredients = recipe.ingredients;
+                            List<Recipe.Steps> steps = recipe.steps;
+                            final int id = recipe.id;
+                            RecipeEntity recipeEntity = new RecipeEntity(id, recipe.name, recipe.servings, recipe.image);
+                            recipeEntity.save();
+
+                            DbUtils.saveIngredientEntities(ingredients, recipeEntity);
+                            DbUtils.saveStepEntities(steps, recipeEntity);
                         }
                         mAdapter.notifyDataSetChanged();
                     } else {
