@@ -1,8 +1,6 @@
 package com.soundwebcraft.dbaker.fragments;
 
 import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,6 +23,7 @@ import com.soundwebcraft.dbaker.data.remote.RetrofitClient;
 import com.soundwebcraft.dbaker.db.DbUtils;
 import com.soundwebcraft.dbaker.db.RecipeEntity;
 import com.soundwebcraft.dbaker.utils.EmptyStateRecyclerView;
+import com.soundwebcraft.dbaker.utils.NetworkUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,7 +105,7 @@ public class RecipeListFragment extends Fragment {
             }
             mAdapter.notifyDataSetChanged();
         } else {
-            if (isConnected()) {
+            if (NetworkUtils.isConnected(mContext)) {
                 fetchRecipes();
             } else {
                 toggleLoadingIndicator(false);
@@ -256,12 +255,5 @@ public class RecipeListFragment extends Fragment {
                 listener.onItemSelected(recipe);
             }
         }
-    }
-
-    // check internet connection state
-    boolean isConnected() {
-        ConnectivityManager connMgr = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        return networkInfo != null && networkInfo.isConnected();
     }
 }
