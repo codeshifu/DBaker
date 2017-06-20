@@ -5,7 +5,8 @@ import com.soundwebcraft.dbaker.data.model.Recipe;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.soundwebcraft.dbaker.db.RecipeEntity.*;
+import static com.soundwebcraft.dbaker.db.RecipeEntity.IngredientEntity;
+import static com.soundwebcraft.dbaker.db.RecipeEntity.StepEntity;
 
 public class DbUtils {
     public static void saveStepEntities(List<Recipe.Steps> steps, RecipeEntity recipeEntity) {
@@ -72,5 +73,11 @@ public class DbUtils {
             ));
         }
         return ingredients;
+    }
+
+    public static List<Recipe.Ingredients> getIngredientListForDesiredRecipe(String id) {
+        RecipeEntity recipeEntity = RecipeEntity.findById(RecipeEntity.class, Long.parseLong(id));
+        String whereClause = "recipe = ?";
+        return extractIngredients(IngredientEntity.find(IngredientEntity.class, whereClause, id));
     }
 }
