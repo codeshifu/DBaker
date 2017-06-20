@@ -5,6 +5,7 @@ import com.soundwebcraft.dbaker.R;
 
 import org.parceler.Parcel;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 @Parcel
@@ -102,6 +103,18 @@ public class Recipe {
             this.quantity = quantity;
             this.measure = measure;
             this.ingredient = ingredient;
+        }
+
+        @Override
+        public String toString() {
+            String ingr = this.getIngredient();
+            ingr = Character.toUpperCase(ingr.charAt(0)) + ingr.substring(1);
+            String measure = this.getMeasure();
+            double qty = this.getQuantity();
+
+            DecimalFormat df = new DecimalFormat("##.#");
+
+            return ingr + ", " + df.format(qty) + " " + measure;
         }
     }
 
