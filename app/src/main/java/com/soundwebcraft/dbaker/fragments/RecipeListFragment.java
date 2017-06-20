@@ -1,6 +1,7 @@
 package com.soundwebcraft.dbaker.fragments;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -153,6 +154,7 @@ public class RecipeListFragment extends Fragment {
                     if (response.body().size() > 0) {
                         Log.d(TAG, getString(R.string.response_success) + response.body().size());
                         List<Recipe> results = response.body();
+                        int count = 1;
                         for (Recipe recipe : results) {
                             mRecipes.add(recipe);
                             // save entities
@@ -162,8 +164,12 @@ public class RecipeListFragment extends Fragment {
                             RecipeEntity recipeEntity = new RecipeEntity(id, recipe.name, recipe.servings, recipe.image);
                             recipeEntity.save();
 
+                            if (count == 1) saveDefaultDesiredRecipe(String.valueOf(recipeEntity.getId()));
+
                             DbUtils.saveIngredientEntities(ingredients, recipeEntity);
                             DbUtils.saveStepEntities(steps, recipeEntity);
+
+                            count++;
                         }
                         mAdapter.notifyDataSetChanged();
                     } else {
@@ -184,6 +190,14 @@ public class RecipeListFragment extends Fragment {
                 Log.e(TAG, getString(R.string.response_error) + t.getMessage());
             }
         });
+    }
+
+    private void saveDefaultDesiredRecipe(String id) {
+        SharedPreferences.Editor editor = mContext.getSharedPreferences(getString(R.string.pref_name), 0).edit();
+        editor.putString(
+                getString(R.string.pref_key),
+                id);
+        editor.apply();
     }
 
     class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder> {
