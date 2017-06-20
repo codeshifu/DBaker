@@ -12,16 +12,25 @@
         android:name="com.orm.SugarApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        tools:replace="android:icon"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Recipe">
-        <!--required by sugar orm library-->
-        <meta-data android:name="DATABASE" android:value="dbaker.db" />
-        <meta-data android:name="VERSION" android:value="1" />
-        <meta-data android:name="QUERY_LOG" android:value="true" />
-        <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="com.soundwebcraft.dbaker" />
+        android:theme="@style/Theme.Recipe"
+        tools:replace="android:icon">
+
+        <!-- required by sugar orm library -->
+        <meta-data
+            android:name="DATABASE"
+            android:value="dbaker.db"/>
+        <meta-data
+            android:name="VERSION"
+            android:value="1"/>
+        <meta-data
+            android:name="QUERY_LOG"
+            android:value="true"/>
+        <meta-data
+            android:name="DOMAIN_PACKAGE_NAME"
+            android:value="com.soundwebcraft.dbaker"/>
 
         <activity android:name=".RecipeListActivity">
             <intent-filter>
@@ -34,6 +43,16 @@
         </activity>
         <activity android:name=".PlayerActivity">
         </activity>
+
+        <receiver android:name=".widget.CollectionWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/collection_widget_info"/>
+        </receiver>
     </application>
 
 </manifest>
