@@ -2,7 +2,6 @@ package com.soundwebcraft.dbaker.widget;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -61,9 +60,8 @@ public class WidgetDataProvider implements RemoteViewsService.RemoteViewsFactory
     @Override
     public RemoteViews getViewAt(int position) {
         RemoteViews view = new RemoteViews(mContext.getPackageName(),
-                android.R.layout.simple_list_item_1);
-        view.setTextViewText(android.R.id.text1, mCollection.get(position));
-        view.setTextColor(android.R.id.text1, Color.BLACK);
+                R.layout.widget_list_item);
+        view.setTextViewText(R.id.widget_textview, mCollection.get(position));
 
         return view;
     }
