@@ -7,8 +7,8 @@
     <string name="steps_count">%1$d Steps</string>
     <string name="custom_font_name">Courgette-Regular.ttf</string>
     <string name="no_recipe_data">No recipes available.</string>
-    <string name="tab_ingredient">INGREDIENTS</string>
-    <string name="tab_step">STEPS</string>
+    <string name="tab_ingredient">Ingredients</string>
+    <string name="tab_step">Steps</string>
     <string name="response_fail">No response from server.</string>
     <string name="response_error">An error occurred.</string>
     <string name="response_success">Success:</string>
