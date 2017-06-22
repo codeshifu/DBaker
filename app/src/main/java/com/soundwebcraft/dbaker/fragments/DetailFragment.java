@@ -2,6 +2,7 @@ package com.soundwebcraft.dbaker.fragments;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.soundwebcraft.dbaker.R;
 import com.soundwebcraft.dbaker.data.model.Recipe;
@@ -52,6 +54,14 @@ public class DetailFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         recipe = Parcels.unwrap(getArguments().getParcelable(RECIPE_EXTRA));
+        Toast.makeText(context, "" + recipe.getId(), Toast.LENGTH_SHORT).show();
+        saveLastViewedRecipe(context);
+    }
+
+    private void saveLastViewedRecipe(Context context) {
+        SharedPreferences.Editor editor = context.getSharedPreferences(getString(R.string.pref_name), 0).edit();
+        editor.putString(getString(R.string.pref_key), String.valueOf(recipe.getId()));
+        editor.apply();
     }
 
     @Override
