@@ -8,14 +8,14 @@
     android:gravity="center_vertical"
     android:minHeight="?attr/listPreferredItemHeight"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="@dimen/padding_md">
 
     <TextView
         android:id="@+id/ingredient"
         style="@style/TextAppearance.AppCompat.Body1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
+        android:textSize="@dimen/text_md"
         tools:text="@string/sample_text"/>
 
 </LinearLayout>
