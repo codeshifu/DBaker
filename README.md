@@ -3,7 +3,8 @@ An app to that allows a user to select a recipe and see video-guided steps for h
 
 This app is the final project in the **Associate Android Developer Fast Track** course offered by [Udacity](https://udacity.com) & **Google** courtesy of [Andela](https://andela.com).
 
-![recipe list](screenshots/mobile-1.png "Welcome screen aka MainActivity")
+![recipe list](screenshots/mobile-1.png "Welcome screen aka MainActivity") ![recipe detail](screenshots/mobile-2.png "Detail view for selected recipe")
+![playing media with exoplayer](screenshots/tablet-2.png "Recipe video guide")
 
 #### Required Tasks
 1. App should display recipes from provided network resource.
