@@ -8,18 +8,14 @@
     android:orientation="horizontal"
     android:layout_height="wrap_content"
     android:background="@android:color/white"
-    android:paddingLeft="8dp"
-    android:paddingRight="16dp"
-    android:paddingTop="16dp"
-    android:paddingBottom="16dp"
-    android:padding="16dp">
+    android:padding="@dimen/padding_md">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:paddingLeft="8dp"
-        android:layout_marginRight="16dp"
+        android:paddingLeft="@dimen/padding_sm"
+        android:layout_marginRight="@dimen/margin_md"
         android:layout_height="wrap_content">
     <TextView
         android:id="@+id/recipe_title"
@@ -33,9 +29,9 @@
         style="@style/TextAppearance.AppCompat.Body1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/margin_md"
         android:ellipsize="end"
-        android:lineSpacingExtra="2dp"
+        android:lineSpacingExtra="@dimen/text_line_spacing_extra"
         android:maxLines="2"
         android:minLines="2"
         tools:text="@string/sample_text"/>
@@ -45,8 +41,8 @@
         style="@style/TextAppearance.AppCompat.Caption"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:layout_marginTop="8dp"
+        android:textSize="@dimen/text_caption"
+        android:layout_marginTop="@dimen/margin_sm"
         tools:text="@string/steps_count"/>
 
     </LinearLayout>
