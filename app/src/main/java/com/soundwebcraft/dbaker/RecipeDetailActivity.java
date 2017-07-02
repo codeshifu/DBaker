@@ -29,7 +29,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
         if (actionBar != null) actionBar.setDisplayShowTitleEnabled(false);
 
         Intent otherIntent = getIntent();
-        if (otherIntent == null) throw new NullPointerException(getString(R.string.null_intent));
+        if (otherIntent == null || !otherIntent.hasExtra(EXTRA_RECIPE)) throw new NullPointerException(getString(R.string.null_intent));
 
         Recipe recipe = Parcels.unwrap(otherIntent.getParcelableExtra(EXTRA_RECIPE));
         FragmentManager fm = getSupportFragmentManager();
