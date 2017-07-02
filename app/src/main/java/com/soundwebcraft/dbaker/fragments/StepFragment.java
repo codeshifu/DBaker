@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -20,6 +21,7 @@ import com.soundwebcraft.dbaker.PlayerActivity;
 import com.soundwebcraft.dbaker.R;
 import com.soundwebcraft.dbaker.utils.EmptyStateRecyclerView;
 import com.soundwebcraft.dbaker.utils.VectorDrawableUtils;
+import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
 
@@ -125,6 +127,8 @@ public class StepFragment extends Fragment {
             TextView tvShortDescription;
             @BindView(R.id.description)
             TextView tvDescription;
+            @BindView(R.id.step_thumbnail)
+            ImageView stepThumbnailView;
 
 
             ViewHolder(View itemView, int viewType) {
@@ -142,6 +146,14 @@ public class StepFragment extends Fragment {
                         mTimelineView.setMarker(VectorDrawableUtils.getDrawable(mContext, R.drawable.ic_radio, R.color.colorPrimaryDark));
                     } else {
                         mTimelineView.setMarker(VectorDrawableUtils.getDrawable(mContext, R.drawable.ic_play, R.color.colorPrimaryDark));
+                    }
+                    if (TextUtils.isEmpty(step.getThumbnailurl())) {
+                        stepThumbnailView.setVisibility(View.GONE);
+                    } else {
+                        Picasso.with(mContext)
+                                .load(step.getThumbnailurl())
+                                .error(R.drawable.no_preview)
+                                .into(stepThumbnailView);
                     }
                 }
             }
