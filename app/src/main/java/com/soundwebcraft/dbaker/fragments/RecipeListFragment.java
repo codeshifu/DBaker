@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,7 @@ import com.soundwebcraft.dbaker.db.DbUtils;
 import com.soundwebcraft.dbaker.db.RecipeEntity;
 import com.soundwebcraft.dbaker.utils.EmptyStateRecyclerView;
 import com.soundwebcraft.dbaker.utils.NetworkUtils;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -255,7 +257,15 @@ public class RecipeListFragment extends Fragment {
                     }
                     int stepsCount = recipe.getSteps().size();
 
-                    ivRecipe.setImageResource(recipe.getImageResourceId());
+                    if (!TextUtils.isEmpty(recipe.getImage())) {
+                        Picasso.with(mContext)
+                                .load(recipe.getImage())
+                                .error(R.drawable.no_preview)
+                                .into(ivRecipe);
+                    } else {
+                        ivRecipe.setImageResource(recipe.getImageResourceId());
+                    }
+
                     tvRecipeTitle.setText(recipe.getName());
                     tvRecipeGuide.setText(step);
                     tvRecipeSteps.setText(getString(R.string.steps_count, stepsCount));
