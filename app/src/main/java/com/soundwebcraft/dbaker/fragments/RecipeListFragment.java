@@ -155,15 +155,14 @@ public class RecipeListFragment extends Fragment {
                         showEmptyViewStateWithoutLoadingIndicator(getString(R.string.response_no_data));
                     }
                 } else {
-                    String msg = getString(R.string.response_fail);
-                    Log.d(TAG, msg + code);
-                    showEmptyViewStateWithoutLoadingIndicator(msg);
+                    showEmptyViewStateWithoutLoadingIndicator(getString(R.string.response_fail));
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<List<Recipe>> call, @NonNull Throwable t) {
                 t.printStackTrace();
+                showEmptyViewStateWithoutLoadingIndicator(getString(R.string.response_error_fetching));
                 Log.e(TAG, getString(R.string.response_error) + t.getMessage());
             }
         });
