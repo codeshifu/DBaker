@@ -8,25 +8,22 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.soundwebcraft.dbaker.R;
+import com.soundwebcraft.dbaker.adapater.RecipeAdapter;
 import com.soundwebcraft.dbaker.data.model.Recipe;
 import com.soundwebcraft.dbaker.data.remote.RecipeService;
 import com.soundwebcraft.dbaker.data.remote.RetrofitClient;
-import com.soundwebcraft.dbaker.db.DbUtils;
-import com.soundwebcraft.dbaker.db.RecipeEntity;
+import com.soundwebcraft.dbaker.data.db.DbUtils;
+import com.soundwebcraft.dbaker.data.db.RecipeEntity;
 import com.soundwebcraft.dbaker.utils.EmptyStateRecyclerView;
 import com.soundwebcraft.dbaker.utils.NetworkUtils;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +57,7 @@ public class RecipeListFragment extends Fragment {
     // material design guidelines - progress activity
     private boolean isLoading = true;
 
-    private OnListItemSelectedListener listener;
+    public OnListItemSelectedListener listener;
 
     public interface OnListItemSelectedListener {
         public void onItemSelected(Recipe recipe);
@@ -88,7 +85,7 @@ public class RecipeListFragment extends Fragment {
 
         unbinder = ButterKnife.bind(this, v);
 
-        mAdapter = new RecipeAdapter(mContext, mRecipes);
+        mAdapter = new RecipeAdapter(this, mContext, mRecipes);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
         mRecyclerView.setLayoutManager(layoutManager);
@@ -111,8 +108,7 @@ public class RecipeListFragment extends Fragment {
             if (NetworkUtils.isConnected(mContext)) {
                 fetchRecipes();
             } else {
-                toggleLoadingIndicator(false);
-                showEmptyView(getString(R.string.no_internet));
+                showEmptyViewStateWithoutLoadingIndicator(getString(R.string.no_internet));
             }
         }
 
@@ -139,9 +135,7 @@ public class RecipeListFragment extends Fragment {
     // display empty state
     private void showEmptyView(String msg) {
         emptyView.setVisibility(View.VISIBLE);
-        if (msg != null) {
-            emptyStateFeedback.setText(msg);
-        }
+        if (msg != null) emptyStateFeedback.setText(msg);
         mRecyclerView.setEmptyView(emptyView);
     }
 
@@ -154,35 +148,16 @@ public class RecipeListFragment extends Fragment {
                 if (response.isSuccessful()) {
                     toggleLoadingIndicator(false);
                     if (response.body().size() > 0) {
-                        Log.d(TAG, getString(R.string.response_success) + response.body().size());
                         List<Recipe> results = response.body();
-                        int count = 1;
-                        for (Recipe recipe : results) {
-                            mRecipes.add(recipe);
-                            // save entities
-                            List<Recipe.Ingredients> ingredients = recipe.ingredients;
-                            List<Recipe.Steps> steps = recipe.steps;
-                            final int id = recipe.id;
-                            RecipeEntity recipeEntity = new RecipeEntity(id, recipe.name, recipe.servings, recipe.image);
-                            recipeEntity.save();
-
-                            if (count == 1) saveDefaultDesiredRecipe(String.valueOf(recipeEntity.getId()));
-
-                            DbUtils.saveIngredientEntities(ingredients, recipeEntity);
-                            DbUtils.saveStepEntities(steps, recipeEntity);
-
-                            count++;
-                        }
+                        parseJsonResponse(results);
                         mAdapter.notifyDataSetChanged();
                     } else {
-                        toggleLoadingIndicator(false);
-                        showEmptyView(getString(R.string.response_no_data));
+                        showEmptyViewStateWithoutLoadingIndicator(getString(R.string.response_no_data));
                     }
                 } else {
                     String msg = getString(R.string.response_fail);
                     Log.d(TAG, msg + code);
-                    toggleLoadingIndicator(false);
-                    showEmptyView(msg);
+                    showEmptyViewStateWithoutLoadingIndicator(msg);
                 }
             }
 
@@ -194,90 +169,35 @@ public class RecipeListFragment extends Fragment {
         });
     }
 
-    private void saveDefaultDesiredRecipe(String id) {
-        SharedPreferences.Editor editor = mContext.getSharedPreferences(getString(R.string.pref_name), 0).edit();
-        editor.putString(
-                getString(R.string.pref_key),
-                id);
-        editor.apply();
+    private void showEmptyViewStateWithoutLoadingIndicator(String msg) {
+        toggleLoadingIndicator(false);
+        showEmptyView(msg);
     }
 
-    class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder> {
+    private void parseJsonResponse(List<Recipe> results) {
+        int count = 1;
+        for (Recipe recipe : results) {
+            mRecipes.add(recipe);
+            // save entities
+            List<Recipe.Ingredients> ingredients = recipe.ingredients;
+            List<Recipe.Steps> steps = recipe.steps;
+            final int id = recipe.id;
+            RecipeEntity recipeEntity = new RecipeEntity(id, recipe.name, recipe.servings, recipe.image);
+            recipeEntity.save();
 
-        private Context mContext;
-        private List<Recipe> mRecipes;
+            if (count == 1)
+                saveDefaultDesiredRecipe(String.valueOf(recipeEntity.getId()));
 
-        RecipeAdapter(Context context, List<Recipe> recipes) {
-            mContext = context;
-            mRecipes = recipes;
+            DbUtils.saveIngredientEntities(ingredients, recipeEntity);
+            DbUtils.saveStepEntities(steps, recipeEntity);
+
+            count++;
         }
+    }
 
-        @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(mContext).inflate(R.layout.list_item_recipe, parent, false);
-
-            return new ViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
-            Recipe recipe = mRecipes.get(position);
-            holder.bind(recipe);
-        }
-
-        @Override
-        public int getItemCount() {
-            return mRecipes.size();
-        }
-
-        class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-            @BindView(R.id.recipe_image)
-            ImageView ivRecipe;
-            @BindView(R.id.recipe_title)
-            TextView tvRecipeTitle;
-            @BindView(R.id.recipe_steps)
-            TextView tvRecipeSteps;
-            @BindView(R.id.recipe_guide)
-            TextView tvRecipeGuide;
-
-            ViewHolder(View itemView) {
-                super(itemView);
-                ButterKnife.bind(this, itemView);
-                itemView.setOnClickListener(this);
-            }
-
-            void bind(Recipe recipe) {
-                if (recipe != null) {
-                    String step = null;
-                    try {
-                        step = recipe.getSteps().get((int) (Math.random() * 4 + 1) + 1).getDescription();
-                    } catch (IndexOutOfBoundsException e) {
-                        step = "";
-                        e.printStackTrace();
-                    }
-                    int stepsCount = recipe.getSteps().size();
-
-                    if (!TextUtils.isEmpty(recipe.getImage())) {
-                        Picasso.with(mContext)
-                                .load(recipe.getImage())
-                                .error(R.drawable.no_preview)
-                                .into(ivRecipe);
-                    } else {
-                        ivRecipe.setImageResource(recipe.getImageResourceId());
-                    }
-
-                    tvRecipeTitle.setText(recipe.getName());
-                    tvRecipeGuide.setText(step);
-                    tvRecipeSteps.setText(getString(R.string.steps_count, stepsCount));
-                }
-            }
-
-            @Override
-            public void onClick(View v) {
-                int clickedPosition = getAdapterPosition();
-                Recipe recipe = mRecipes.get(clickedPosition);
-                listener.onItemSelected(recipe);
-            }
-        }
+    private void saveDefaultDesiredRecipe(String id) {
+        SharedPreferences.Editor editor = mContext.getSharedPreferences(getString(R.string.pref_name), 0).edit();
+        editor.putString(getString(R.string.pref_key), id);
+        editor.apply();
     }
 }

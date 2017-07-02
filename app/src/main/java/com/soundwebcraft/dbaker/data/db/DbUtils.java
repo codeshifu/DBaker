@@ -1,12 +1,12 @@
-package com.soundwebcraft.dbaker.db;
+package com.soundwebcraft.dbaker.data.db;
 
 import com.soundwebcraft.dbaker.data.model.Recipe;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.soundwebcraft.dbaker.db.RecipeEntity.IngredientEntity;
-import static com.soundwebcraft.dbaker.db.RecipeEntity.StepEntity;
+import static com.soundwebcraft.dbaker.data.db.RecipeEntity.IngredientEntity;
+import static com.soundwebcraft.dbaker.data.db.RecipeEntity.StepEntity;
 
 public class DbUtils {
     public static void saveStepEntities(List<Recipe.Steps> steps, RecipeEntity recipeEntity) {

@@ -1,4 +1,4 @@
-package com.soundwebcraft.dbaker.db;
+package com.soundwebcraft.dbaker.data.db;
 
 import com.orm.SugarRecord;
 

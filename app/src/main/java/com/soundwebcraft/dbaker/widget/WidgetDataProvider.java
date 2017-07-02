@@ -7,7 +7,7 @@ import android.widget.RemoteViewsService;
 
 import com.soundwebcraft.dbaker.R;
 import com.soundwebcraft.dbaker.data.model.Recipe;
-import com.soundwebcraft.dbaker.db.DbUtils;
+import com.soundwebcraft.dbaker.data.db.DbUtils;
 
 import java.util.ArrayList;
 import java.util.List;
