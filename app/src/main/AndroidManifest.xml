@@ -18,20 +18,6 @@
         android:theme="@style/Theme.Recipe"
         tools:replace="android:icon">
 
-        <!-- required by sugar orm library -->
-        <meta-data
-            android:name="DATABASE"
-            android:value="dbaker.db"/>
-        <meta-data
-            android:name="VERSION"
-            android:value="1"/>
-        <meta-data
-            android:name="QUERY_LOG"
-            android:value="true"/>
-        <meta-data
-            android:name="DOMAIN_PACKAGE_NAME"
-            android:value="com.soundwebcraft.dbaker"/>
-
         <activity android:name=".RecipeListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -53,8 +39,16 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/collection_widget_info"/>
         </receiver>
-        <service android:name=".widget.WidgetService"
-                 android:permission="android.permission.BIND_REMOTEVIEWS"/>
+        <service
+            android:name=".widget.WidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>
+
+        <!--recipe provider-->
+        <provider
+            android:name=".data.db.RecipeProvider"
+            android:authorities="com.soundwebcraft.dbaker"
+            android:exported="true"/>
+        
     </application>
 
 </manifest>

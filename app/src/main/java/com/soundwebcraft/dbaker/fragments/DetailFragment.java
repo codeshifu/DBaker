@@ -1,6 +1,8 @@
 package com.soundwebcraft.dbaker.fragments;
 
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 
 import com.soundwebcraft.dbaker.R;
 import com.soundwebcraft.dbaker.data.model.Recipe;
+import com.soundwebcraft.dbaker.widget.CollectionWidget;
 
 import org.parceler.Parcels;
 
@@ -60,6 +63,13 @@ public class DetailFragment extends Fragment {
         SharedPreferences.Editor editor = context.getSharedPreferences(getString(R.string.pref_name), 0).edit();
         editor.putString(getString(R.string.pref_key), String.valueOf(recipe.getId()));
         editor.apply();
+
+        AppWidgetManager widgetManager = AppWidgetManager.getInstance(context);
+        if (widgetManager != null) {
+            ComponentName componentName = new ComponentName(context, CollectionWidget.class);
+            int[] appWidgetIds = widgetManager.getAppWidgetIds(componentName);
+            widgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_list);
+        }
     }
 
     @Override

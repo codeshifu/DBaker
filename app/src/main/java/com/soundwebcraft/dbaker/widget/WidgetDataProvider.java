@@ -7,7 +7,7 @@ import android.widget.RemoteViewsService;
 
 import com.soundwebcraft.dbaker.R;
 import com.soundwebcraft.dbaker.data.model.Recipe;
-import com.soundwebcraft.dbaker.data.db.DbUtils;
+import com.soundwebcraft.dbaker.utils.DbUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ public class WidgetDataProvider implements RemoteViewsService.RemoteViewsFactory
         String string = mContext.getSharedPreferences(context.getString(R.string.pref_name), 0).getString(
                 context.getString(R.string.pref_key), context.getString(R.string.pref_default));
 
-        List<Recipe.Ingredients> ingredients = DbUtils.getIngredientListForDesiredRecipe(string);
+        List<Recipe.Ingredients> ingredients = DbUtils.getIngredientListForDesiredRecipe(mContext,  string);
 
         for (Recipe.Ingredients ingredient :
                 ingredients) {

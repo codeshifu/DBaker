@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
@@ -16,12 +18,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.soundwebcraft.dbaker.R;
+import com.soundwebcraft.dbaker.RecipeLoader;
 import com.soundwebcraft.dbaker.adapater.RecipeAdapter;
+import com.soundwebcraft.dbaker.utils.DbUtils;
 import com.soundwebcraft.dbaker.data.model.Recipe;
 import com.soundwebcraft.dbaker.data.remote.RecipeService;
 import com.soundwebcraft.dbaker.data.remote.RetrofitClient;
-import com.soundwebcraft.dbaker.data.db.DbUtils;
-import com.soundwebcraft.dbaker.data.db.RecipeEntity;
 import com.soundwebcraft.dbaker.utils.EmptyStateRecyclerView;
 import com.soundwebcraft.dbaker.utils.NetworkUtils;
 
@@ -35,8 +37,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class RecipeListFragment extends Fragment {
+public class RecipeListFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Recipe>> {
 
+    private static final int LOADER_ID = 1000;
     @BindView(R.id.recyclerview)
     EmptyStateRecyclerView mRecyclerView;
     @BindView(R.id.empty_view)
@@ -46,7 +49,7 @@ public class RecipeListFragment extends Fragment {
     @BindView(R.id.loading_indicator)
     ProgressBar mLoadingIndicator;
 
-    private RecipeAdapter mAdapter;
+    public RecipeAdapter mAdapter;
     private Context mContext;
     private RecipeService mService;
 
@@ -93,25 +96,8 @@ public class RecipeListFragment extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setHasFixedSize(true);
 
-        long count = RecipeEntity.count(RecipeEntity.class, null, null);
-        if (count > 0) {
-            // hide progress bar
-            toggleLoadingIndicator(false);
-            // load data from db
-            List<RecipeEntity> recipeEntities = RecipeEntity.listAll(RecipeEntity.class);
-            for (RecipeEntity recipeEntity : recipeEntities) {
-                Recipe recipe = DbUtils.convertToRecipeObject(recipeEntity);
-                mRecipes.add(recipe);
-            }
-            mAdapter.notifyDataSetChanged();
-        } else {
-            if (NetworkUtils.isConnected(mContext)) {
-                fetchRecipes();
-            } else {
-                showEmptyViewStateWithoutLoadingIndicator(getString(R.string.no_internet));
-            }
-        }
-
+        // initialize loader
+        getLoaderManager().initLoader(LOADER_ID, null, this);
         return v;
     }
 
@@ -122,7 +108,7 @@ public class RecipeListFragment extends Fragment {
     }
 
     // toggle loading indicator on/off
-    private void toggleLoadingIndicator(boolean state) {
+    public void toggleLoadingIndicator(boolean state) {
         if (state) {
             mLoadingIndicator.setVisibility(View.VISIBLE);
             isLoading = true;
@@ -147,10 +133,12 @@ public class RecipeListFragment extends Fragment {
                 int code = response.code();
                 if (response.isSuccessful()) {
                     toggleLoadingIndicator(false);
-                    if (response.body().size() > 0) {
-                        List<Recipe> results = response.body();
-                        parseJsonResponse(results);
-                        mAdapter.notifyDataSetChanged();
+                    List<Recipe> results = response.body();
+                    if (results != null && results.size() > 0) {
+                        int recipeId = refreshAdapter(results);
+                        saveDefaultDesiredRecipe(String.valueOf(recipeId));
+                        // persist fetched data
+                        DbUtils.persistToDb(mContext, results);
                     } else {
                         showEmptyViewStateWithoutLoadingIndicator(getString(R.string.response_no_data));
                     }
@@ -168,35 +156,48 @@ public class RecipeListFragment extends Fragment {
         });
     }
 
-    private void showEmptyViewStateWithoutLoadingIndicator(String msg) {
+    public void showEmptyViewStateWithoutLoadingIndicator(String msg) {
         toggleLoadingIndicator(false);
         showEmptyView(msg);
-    }
-
-    private void parseJsonResponse(List<Recipe> results) {
-        int count = 1;
-        for (Recipe recipe : results) {
-            mRecipes.add(recipe);
-            // save entities
-            List<Recipe.Ingredients> ingredients = recipe.ingredients;
-            List<Recipe.Steps> steps = recipe.steps;
-            final int id = recipe.id;
-            RecipeEntity recipeEntity = new RecipeEntity(id, recipe.name, recipe.servings, recipe.image);
-            recipeEntity.save();
-
-            if (count == 1)
-                saveDefaultDesiredRecipe(String.valueOf(recipeEntity.getId()));
-
-            DbUtils.saveIngredientEntities(ingredients, recipeEntity);
-            DbUtils.saveStepEntities(steps, recipeEntity);
-
-            count++;
-        }
     }
 
     private void saveDefaultDesiredRecipe(String id) {
         SharedPreferences.Editor editor = mContext.getSharedPreferences(getString(R.string.pref_name), 0).edit();
         editor.putString(getString(R.string.pref_key), id);
         editor.apply();
+    }
+
+    private int refreshAdapter(List<Recipe> recipes) {
+        int count = 1;
+        int id = 0;
+        for (Recipe recipe : recipes) {
+            mRecipes.add(recipe);
+            if (count == 1) id = recipe.getId();
+            count++;
+        }
+        mAdapter.notifyDataSetChanged();
+        return id;
+    }
+
+    @Override
+    public Loader<List<Recipe>> onCreateLoader(int id, Bundle args) {
+        return new RecipeLoader(mContext);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<List<Recipe>> loader, List<Recipe> recipes) {
+        if (recipes != null) {
+            refreshAdapter(recipes);
+            toggleLoadingIndicator(false);
+        } else {
+            if (NetworkUtils.isConnected(mContext)) fetchRecipes();
+            else showEmptyViewStateWithoutLoadingIndicator(getString(R.string.no_internet));
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<Recipe>> loader) {
+        mRecipes.clear();
+        mAdapter.notifyDataSetChanged();
     }
 }
