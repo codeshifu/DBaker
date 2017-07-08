@@ -4,7 +4,6 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 
 import com.soundwebcraft.dbaker.data.model.Recipe;
 
@@ -174,7 +173,6 @@ public class DbUtils {
 
     public static int insertRecipeSteps(Context context, int recipeId, List<Recipe.Steps> steps) {
         int size = steps.size();
-        Log.d("INSERT", "insertRecipeSteps: " + size);
         ContentValues[] values = new ContentValues[size];
         for (int i = 0; i < size; i++) {
             ContentValues value = new ContentValues();
