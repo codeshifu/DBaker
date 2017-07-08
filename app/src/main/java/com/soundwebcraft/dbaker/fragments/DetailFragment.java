@@ -8,15 +8,20 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.soundwebcraft.dbaker.R;
 import com.soundwebcraft.dbaker.data.model.Recipe;
@@ -33,12 +38,20 @@ public class DetailFragment extends Fragment {
     private static final String RECIPE_EXTRA = "recipe_extra";
     @BindView(R.id.app_bar_image)
     ImageView heroImage;
-    @BindView(R.id.app_bar_toolbar_title)
-    TextView mToolbarTitle;
+    //    @BindView(R.id.app_bar_toolbar_title)
+//    TextView mToolbarTitle;
     @BindView(R.id.viewpager)
     ViewPager mViewpager;
     @BindView(R.id.tab)
     TabLayout mTab;
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
+    @BindView(R.id.coordinator_layout)
+    CoordinatorLayout mCoordinatorLayout;
+    @BindView(R.id.collapsing_toolbar)
+    CollapsingToolbarLayout mCollapsingToolbar;
+    @BindView(R.id.appbar)
+    AppBarLayout mAppbar;
 
     private Unbinder unbinder;
     private Recipe recipe;
@@ -79,10 +92,16 @@ public class DetailFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_detail, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-        Typeface courgette = Typeface.createFromAsset(getActivity().getAssets(), getString(R.string.custom_font_name));
-        mToolbarTitle.setTypeface(courgette);
+        AppCompatActivity activity = ((AppCompatActivity) getContext());
+        activity.setSupportActionBar(mToolbar);
+        ActionBar actionBar = activity.getSupportActionBar();
+        if (actionBar != null) activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mToolbarTitle.setText(recipe.getName());
+        mCollapsingToolbar.setTitle(recipe.getName());
+        Typeface courgette = Typeface.createFromAsset(getActivity().getAssets(), getString(R.string.custom_font_name));
+        mCollapsingToolbar.setCollapsedTitleTypeface(courgette);
+        mCollapsingToolbar.setExpandedTitleTypeface(courgette);
+
         heroImage.setImageResource(recipe.getImageResourceId());
 
         mViewpager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager()) {

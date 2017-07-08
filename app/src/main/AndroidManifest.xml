@@ -24,7 +24,9 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".RecipeDetailActivity">
+        <activity
+            android:name=".RecipeDetailActivity"
+            android:parentActivityName=".RecipeListActivity">
         </activity>
         <activity android:name=".PlayerActivity">
         </activity>
@@ -47,7 +49,7 @@
             android:name=".data.db.RecipeProvider"
             android:authorities="com.soundwebcraft.dbaker"
             android:exported="true"/>
-        
+
     </application>
 
 </manifest>
